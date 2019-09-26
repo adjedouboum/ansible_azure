@@ -1,6 +1,30 @@
+
+Skip to content
+Pull requests
+Issues
+Marketplace
+Explore
+@adjedouboum
+
+1
+0
+
+    0
+
+diranetafen/simple_api
+Code
+Issues 0
+Pull requests 1
+Projects 0
+Wiki
+Security
+Insights
+simple_api/azure-pipelines.yml
+centos add deployment step 52b6b11 2 days ago
+37 lines (31 sloc) 742 Bytes
 # Docker
 
-# Build a Docker image 
+# Build a Docker image
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
@@ -15,7 +39,7 @@ variables:
 stages:
 - stage: Build
   displayName: Build image
-  jobs:  
+  jobs:
   - job: Build
     displayName: Build
     pool:
@@ -24,7 +48,13 @@ stages:
     - task: Docker@2
       displayName: Build and Push
       inputs:
-        containerRegistry: 'DiraneAzureContainerRegistry'
+        containerRegistry: 'DiraneAzureContainerRegistry_northeurope'
         repository: 'simple_api'
         command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: '**/Dockerfile'    
+    - bash: |
+        ./install_ansible.sh
+      displayName: install ansible 
+    - bash: |
+        ansible-playbook deploy-app.yml 
+      displayName: deploy app
